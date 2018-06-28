@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="/app/static/css/style.css">
+    <link rel="stylesheet" href="/app/static/css/bootstrap.css">
+    <script src="/static/js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        let area_url = 'http://127.0.0.1:9000/home/areas/'
+        $(function () {
+            $.get(area_url, function (result) {
+                if (result && result.status === 200) {
+                    let $ul = $('<ul>');
+                    Object.keys(result.area).forEach(function (key) {
+                        let $li = $('<li>');
+                        $li.appeng($('<span>').text(key));
+                        for (let obj of result.ares[key]) {
+                            $li.append($('<a>').text(obj.name)).appendTo($ul)
+                        }
+
+                    });
+                    $('#city').append($ul)
+                }
+            })
+        })
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>
