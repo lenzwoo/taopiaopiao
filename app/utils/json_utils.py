@@ -1,5 +1,6 @@
 # 对象不支持转化成json数据
 import datetime
+from decimal import Decimal
 
 
 class Test:
@@ -10,15 +11,19 @@ class Test:
 
 # 日期
 def to_dict(object):
-    obj={}
+    obj = {}
     keys = vars(object).keys()
     for key in keys:
         if not key.startswith('_'):
-            if isinstance(getattr(object,key),datetime.datetime):
-                obj[key] = getattr(object,key).strftime('%Y-%m-%d %H:%M:%S')
-            elif isinstance(getattr(object,key),datetime.date):
-                obj[key] = getattr(object,key).strftime('%Y-%m-%d')
-
+            if isinstance(getattr(object, key), datetime.datetime):
+                obj[key] = getattr(object, key).strftime('%Y-%m-%d %H:%M:%S')
+            elif isinstance(getattr(object, key), datetime.date):
+                obj[key] = getattr(object, key).strftime('%Y-%m-%d')
+            elif isinstance(getattr(object, key), Decimal):
+                obj[key] = str(getattr(object, key))
+            else:
+                obj[key] = getattr(object, key)
+    return obj
 
 
 def to_list(objects):

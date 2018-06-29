@@ -5,29 +5,79 @@
     <title>首页</title>
     <link rel="stylesheet" href="/app/static/css/style.css">
     <link rel="stylesheet" href="/app/static/css/bootstrap.css">
-    <script src="/static/js/jquery-1.10.2.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript">
-        let area_url = 'http://127.0.0.1:9000/home/areas/'
+        let area_url = 'http://127.0.0.1:9000/home/areas/';
+        let moves_url = 'http://127.0.0.1:9000/home/moves/';
+        let base_img_url = 'https://img.alicdn.com/bao/uploaded/';
+        //jQuery （将jquery功能封装，调用）
         $(function () {
+            load_area_data();
+            load_movie_data();
+        });
+
+        //加载位置区域的数据
+        function load_area_data() {
+            //get() 方法通过远程 HTTP GET 请求载入信息。这是一个简单的 GET 请求功能以取代复杂 $.ajax 。请求成功时可调用回调函数。如果需要在出错时执行函数，请使用 $.ajax。
+            //get请求area_url地址，并获取返回的result数据（result为json数据）
             $.get(area_url, function (result) {
                 if (result && result.status === 200) {
                     let $ul = $('<ul>');
                     Object.keys(result.area).forEach(function (key) {
                         let $li = $('<li>');
-                        $li.appeng($('<span>').text(key));
+                        $li.append($('<span>').text(key));
                         for (let obj of result.ares[key]) {
                             $li.append($('<a>').text(obj.name)).appendTo($ul)
                         }
-
                     });
                     $('#city').append($ul)
                 }
             })
-        })
-    </script>
+        }
 
+        //加载电影相关的数据
+        function load_movie_data() {
+            $.getJSON(moves_url, function (result) {
+                if (result && result.status === 200) {
+                    data = result.data;
+                    //先显示所有影片数（count）
+                    $('#hot_move').text('热门影片(' + data.count[0][1] + ')');
+                    $('#show_move').text('即将上映(' + data.count[1][1] + ')');
+                    //填充热门影片的数据，首页显示前5条
+                    for (let movie of data.hot_movies) {
+                        let $li = $('<li>');
+                        //创建img标签
+                        $('<div>').css('position', 'relative')
+                            .append(
+                                $('<img>').attr('src', base_img_url + movie.backgroundpicture)
+                                    .attr('width', '160')
+                                    .attr('height', '240')
+                            )
+
+                    }
+                }
+            })
+
+        }
+    </script>
 </head>
 <body>
+<div id="city">
 
+</div>
+<div id="movie">
+    <div class="movie_top">
+        <span id="hot_move">热门影片</span>
+        <span id="show_move">即将上映</span>
+    </div>
+    <ul id="hot_detail">
+
+    </ul>
+    <ul id="show_detail">
+
+    </ul>
+
+
+</div>
 </body>
 </html>

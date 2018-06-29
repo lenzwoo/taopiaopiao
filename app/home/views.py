@@ -24,7 +24,7 @@ def get_ares():
     return jsonify(result)
 
 
-@home.route('/movies/', methods=['POST', 'GET'])
+@home.route('/moves/', methods=['POST', 'GET'])
 def movies():
     result = {}
     try:
